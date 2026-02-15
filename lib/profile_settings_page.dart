@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+// Sayfa geçişleri için gerekli tüm sayfaları import ediyoruz
 import 'update_profile_page.dart';
 import 'change_phone_page.dart';
 import 'change_password_page.dart';
+import 'about_me_page.dart';
+import 'faculty_dept_page.dart';
+import 'class_year_page.dart';
+import 'notification_settings_page.dart';
+import 'language_settings_page.dart';
 
 class ProfileSettingsPage extends StatelessWidget {
   const ProfileSettingsPage({super.key});
@@ -32,22 +38,28 @@ class ProfileSettingsPage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
         children: [
-          // Görseldeki (image_9cdb00.png) hiyerarşiye göre kategoriler
+          // 1. Hesap Bilgileri Kategorisi
           _buildSettingsSection(context, "Hesap Bilgileri", [
             "Profil Bilgilerini Güncelle",
             "Telefon Numarası Değiştir",
             "Şifreni Değiştir",
           ]),
+
+          // 2. Kullanıcı Bilgileri Kategorisi
           _buildSettingsSection(context, "Kullanıcı Bilgileri", [
             "Hakkımda",
             "Fakülte / Bölüm",
             "Sınıf / Mezuniyet Yılı",
           ]),
+
+          // 3. Tercihler Kategorisi
           _buildSettingsSection(context, "Tercihler", [
             "Bildirim Ayarları",
             "Dil Seçimi",
             "Doğrulanmış Hesap",
           ]),
+
+          // 4. Gizlilik ve Güvenlik Kategorisi
           _buildSettingsSection(context, "Gizlilik ve Güvenlik", [
             "Profil Gizlilik Ayarları",
             "Engellenen Kullanıcılar",
@@ -60,7 +72,7 @@ class ProfileSettingsPage extends StatelessWidget {
     );
   }
 
-  // Navigasyon Mantığı Eklenmiş Kategori Oluşturucu
+  // Dinamik Kategori ve Liste Yapısı
   Widget _buildSettingsSection(
     BuildContext context,
     String sectionTitle,
@@ -104,31 +116,8 @@ class ProfileSettingsPage extends StatelessWidget {
                       size: 22,
                       color: Colors.grey,
                     ),
-                    onTap: () {
-                      // SAYFA GEÇİŞLERİ BURADA YÖNETİLİR
-                      if (text == "Profil Bilgilerini Güncelle") {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const UpdateProfilePage(),
-                          ),
-                        );
-                      } else if (text == "Telefon Numarası Değiştir") {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ChangePhonePage(),
-                          ),
-                        );
-                      } else if (text == "Şifreni Değiştir") {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ChangePasswordPage(),
-                          ),
-                        );
-                      }
-                    },
+                    onTap: () =>
+                        _navigate(context, text), // Dinamik Yönlendirme
                   ),
                   if (idx != items.length - 1)
                     Divider(
@@ -147,13 +136,48 @@ class ProfileSettingsPage extends StatelessWidget {
     );
   }
 
+  // Merkezi Navigasyon Mantığı
+  void _navigate(BuildContext context, String target) {
+    Widget? page;
+    switch (target) {
+      case "Profil Bilgilerini Güncelle":
+        page = const UpdateProfilePage();
+        break;
+      case "Telefon Numarası Değiştir":
+        page = const ChangePhonePage();
+        break;
+      case "Şifreni Değiştir":
+        page = const ChangePasswordPage();
+        break;
+      case "Hakkımda":
+        page = const AboutMePage();
+        break;
+      case "Fakülte / Bölüm":
+        page = const FacultyDeptPage();
+        break;
+      case "Sınıf / Mezuniyet Yılı":
+        page = const ClassYearPage();
+        break;
+      case "Bildirim Ayarları":
+        page = const NotificationSettingsPage();
+        break;
+      case "Dil Seçimi":
+        page = const LanguageSettingsPage();
+        break;
+    }
+
+    if (page != null) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => page!));
+    }
+  }
+
   Widget _buildBottomNav() {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       backgroundColor: unicepBlue,
       selectedItemColor: Colors.white,
       unselectedItemColor: Colors.white38,
-      currentIndex: 4, // Profil sekmesi aktif
+      currentIndex: 4, // Profil sekmesi aktif olduğu için 4
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: "Anasayfa"),
         BottomNavigationBarItem(icon: Icon(Icons.list), label: "Başlıklar"),
